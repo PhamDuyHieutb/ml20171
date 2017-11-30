@@ -1,50 +1,13 @@
 from os import listdir
-from os.path import join
 import numpy as np
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfTransformer
-from random import shuffle
-from sklearn.metrics import confusion_matrix, f1_score, accuracy_score
-from DataProcessor import DataProcessor
+from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import itertools
 
 
-FOLDER = "preprocessv2/trainprocessed"
-TEST = "preprocessv2/testprocessed"
-# FOLDER = "testsample/trainfolder/finaltrain"
-# TEST = "testsample/testfolder/finaltest"
-
-'''
-this code : convert data preprocessed to svm format data 
-and visualize result
-'''
-
-dataprocessor = DataProcessor()
+# nhan lop
 classes = []
-def getInput (path, train=False) :
-    #   GET DATA    #
-    
-    corpus = []
-    label  = []
-    counter = 0
 
-    for sub_folder in listdir(path):
-        pathsub = join(path, sub_folder)
-        for file_name in listdir(pathsub):
-            content = open(join(pathsub, file_name)).read().rstrip()
-            label.append(counter)
-            doc = ' '.join(content.split(", "))
-            corpus.append(doc)
-        counter += 1
-
-#
-    if train :
-        tfidf = dataprocessor.fit(corpus)
-    else :
-        tfidf = dataprocessor.transform(corpus)
-
-    return tfidf, label
 
 def read_file(file_path):
     """
@@ -56,49 +19,9 @@ def read_file(file_path):
         text = file.read()
     except UnicodeDecodeError:
         print("fail open file: " + file_path)
-        text =''
+        text = ''
     file.close()
     return text
-
-
-def write_file(file_path, data):
-    """
-    Write file to disk
-    file_path
-    data
-    """
-    file = open(file_path, 'w')
-    file.write(data)
-    file.close()
-
-# convert data to format for svm
-def convertdata(input,path):
-    alldata = []
-    for a, b in input:
-        data = str(b)
-        index = -1
-        for tf in a:
-            index +=1
-            if tf != 0:
-                feature = str(index) +":" + str(tf)
-                data = data +" "+ feature
-        if len(data.split(" ")) > 3:
-            alldata.append(data)
-        write_file(path, "\n".join(alldata))
-
-
-#   INPUT ARRAY
-def ConvertAllDataToSvm():
-    inputtrain, labeltrain = getInput(FOLDER, train=True)
-    input_train = list(zip(inputtrain, labeltrain))
-    shuffle(input_train)
-
-    exampletest, labeltest = getInput(TEST)
-    inputtest = list(zip(exampletest, labeltest))
-    shuffle(inputtest)
-
-    convertdata(input_train,"preprocessv2/datatrainsvm")
-    convertdata(inputtest,"preprocessv2/datatestsvm")
 
 def plot_confusion_matrix(cm,classes,normalize=False,cmap = plt.cm.Blues):
 
@@ -132,24 +55,32 @@ def plot_confusion_matrix(cm,classes,normalize=False,cmap = plt.cm.Blues):
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
 
-y_test = []
-for line in read_file("preprocessv2/datatestsvm").split("\n"):
-     y_test.append(line.split(" ")[0])
+# path data
+TRAIN = "preprocessv2/trainprocessed"
+TEST = "preprocessv2/testprocessed"
 
-y_pred = []
-label_predic_path = '/home/hadoop/PycharmProjects/libsvm-3.22/test/resultofficialv8'
-for line in read_file(label_predic_path).split("\n"):
-    y_pred.append(line)
+def main():
+    y_test = []
+    for line in read_file("preprocessv2/datatestsvm").split("\n"):
+         y_test.append(line.split(" ")[0])
 
-for sub_folder in listdir(TEST):
-    classes.append(sub_folder)
+    y_pred = []
+    label_predic_path = '/home/hadoop/PycharmProjects/libsvm-3.22/test/resultofficialv8'
+    for line in read_file(label_predic_path).split("\n"):
+        y_pred.append(line)
 
-cnf_matrix = confusion_matrix(y_test,y_pred[:-1])
-# np.set_printoptions(precision= -1)
+    for sub_folder in listdir(TEST):
+        classes.append(sub_folder)
 
-plt.figure(figsize=(8, 8))
-plot_confusion_matrix(cnf_matrix,classes=classes,normalize= True)
-plt.show()
+    cnf_matrix = confusion_matrix(y_test,y_pred[:-1])
+    # np.set_printoptions(precision= -1)
+
+    plt.figure(figsize=(8, 8))
+    plot_confusion_matrix(cnf_matrix,classes=classes,normalize= True)
+    plt.show()
+
+if __name__ == '__main__':
+    main()
 
 
 

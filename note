@@ -1,19 +1,13 @@
 
-loai bo > 8000 va < 4
 
-dict : 11154 word
 
-svm : 0.768  voi C =4
-nb  : 0.84   alpha = 0.1 laplace smoothing
 
-loai bo  frequence > 4000 va < 4 && tu co so vb chứa từ đó > 3000, < 3
-
-dict  11181
+loai bo  frequence > 4000 va < 4 && tu co so vb chứa từ đó > 3000, < 4
 
 v2:
 dict trc : 9500
 dict sau : 8645
-Accuracy = 79.8449% (5764/7219) (classification)
+Accuracy = 79.91% (5769/7219) (classification)
 
 v3 dict trc 14574 tu
 after remove dict : 13358
