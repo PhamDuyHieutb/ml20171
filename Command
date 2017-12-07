@@ -1,0 +1,18 @@
+
+loai bo  frequence > 4000 va < 4 && tu co so vb chứa từ đó > 3000, < 4
+
+v2:
+dict trc : 9500
+dict sau : 8645
+Accuracy = 79.91% (5769/7219) (classification)
+
+v3 dict trc 14574 tu
+after remove dict : 13358
+Accuracy = 79.768% (5914/7414) (classification)
+
+
+tập lệnh :
+vào libsvm và chạy lệnh:
+grid : python /libsvm-3.22/tools/grid* -log2c -5,15,2 -log2g 3,-15,-2 datatrainsvm
+train: svm-train -c 32 -g 0.5 -t 0 datatrainsvm ./test/modelofficialv8
+predict:svm-predict datatestsvm ./test/modelofficialv8 ./test/resultofficialv8	
