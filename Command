@@ -12,7 +12,9 @@ Accuracy = 79.768% (5914/7414) (classification)
 
 
 tập lệnh :
-vào libsvm và chạy lệnh:
-grid : python /libsvm-3.22/tools/grid* -log2c -5,15,2 -log2g 3,-15,-2 datatrainsvm
-train: svm-train -c 32 -g 0.5 -t 0 datatrainsvm ./test/modelofficialv8
-predict:svm-predict datatestsvm ./test/modelofficialv8 ./test/resultofficialv8	
+1.Run preprocessdata.py để xử lý data ban đầu
+2.Vào libsvm và chạy lệnh:
+tìm tham số c, slack bằng gói grid : python /libsvm-3.22/tools/grid* -log2c -5,15,2 -log2g 3,-15,-2 datatrainsvm  
+3.Training bằng gói train: svm-train -c 32 -g 0.5 -t 0 datatrainsvm ./test/modelofficialv8
+4.Tiến hành predict :svm-predict datatestsvm ./test/modelofficialv8 ./test/resultofficialv8
+5. Với đầu ra được predict ta chạy visualizeData.py để thể hiện kết quả lên bằng hình ảnh.	
